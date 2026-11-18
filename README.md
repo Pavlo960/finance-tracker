@@ -2,7 +2,7 @@
 
 # 💰 Finance Tracker API
 
-**REST API для обліку витрат і доходів з конвертацією гривні за офіційним курсом НБУ**
+**A REST API for tracking expenses and income, with UAH conversion at the official National Bank of Ukraine rate**
 
 ![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.162-009688?logo=fastapi&logoColor=white)
@@ -14,130 +14,130 @@
 
 ---
 
-## ✨ Можливості
+## ✨ Features
 
-- 📝 **CRUD для транзакцій** — створення, перегляд, часткове оновлення та видалення витрат і доходів
-- 🔍 **Фільтрація** за категорією, типом (дохід / витрата) та діапазоном дат
-- 📄 **Пагінація** через `limit` / `offset`
-- 💱 **Конвертація UAH** в кілька валют одночасно за курсом [НБУ](https://bank.gov.ua/) — на сьогодні або на будь-яку дату
-- ⚡ **Асинхронні запити** — курси всіх валют завантажуються паралельно (`asyncio.gather`)
-- ✅ **Валідація даних** через Pydantic v2 (точні суми в `Decimal`, без похибок float)
-- 📚 **Автоматична документація** Swagger UI та ReDoc
+- 📝 **Transaction CRUD**: create, read, partially update and delete expenses and income
+- 🔍 **Filtering** by category, type (income / expense) and date range
+- 📄 **Pagination** via `limit` / `offset`
+- 💱 **UAH conversion** into several currencies at once at the [NBU](https://bank.gov.ua/) rate, for today or any past date
+- ⚡ **Async requests**: rates for all currencies are fetched in parallel (`asyncio.gather`)
+- ✅ **Data validation** with Pydantic v2 (exact amounts as `Decimal`, no float rounding errors)
+- 📚 **Auto-generated docs** with Swagger UI and ReDoc
 
-## 🛠 Стек
+## 🛠 Tech stack
 
-| Шар | Технологія |
+| Layer | Technology |
 |---|---|
-| Веб-фреймворк | FastAPI + Uvicorn |
+| Web framework | FastAPI + Uvicorn |
 | ORM | SQLAlchemy 2.x (typed `Mapped`) |
-| Валідація | Pydantic v2 |
-| База даних | SQLite (або будь-яка інша через `DATABASE_URL`) |
-| HTTP-клієнт | httpx (async) |
+| Validation | Pydantic v2 |
+| Database | SQLite (or any other via `DATABASE_URL`) |
+| HTTP client | httpx (async) |
 
-## 🚀 Швидкий старт
+## 🚀 Quick start
 
 ```bash
-# 1. Клонувати репозиторій
+# 1. Clone the repository
 git clone https://github.com/pavlo960/finance-tracker.git
 cd finance-tracker
 
-# 2. Створити віртуальне оточення
+# 2. Create a virtual environment
 python -m venv .venv
 # Windows
 .venv\Scripts\activate
 # Linux / macOS
 source .venv/bin/activate
 
-# 3. Встановити залежності
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Запустити сервер
+# 4. Run the server
 uvicorn app.main:app --reload
 ```
 
-Після запуску відкрий:
+Once it's running, open:
 
-- 🌐 API — http://127.0.0.1:8000
-- 📘 Swagger UI — http://127.0.0.1:8000/docs
-- 📗 ReDoc — http://127.0.0.1:8000/redoc
+- 🌐 API: http://127.0.0.1:8000
+- 📘 Swagger UI: http://127.0.0.1:8000/docs
+- 📗 ReDoc: http://127.0.0.1:8000/redoc
 
-### ⚙️ Конфігурація
+### ⚙️ Configuration
 
-| Змінна | Опис | За замовчуванням |
+| Variable | Description | Default |
 |---|---|---|
-| `DATABASE_URL` | Рядок підключення SQLAlchemy | `sqlite:///./app.db` |
+| `DATABASE_URL` | SQLAlchemy connection string | `sqlite:///./app.db` |
 
-Таблиці створюються автоматично при старті застосунку.
+Tables are created automatically on startup.
 
-## 📡 Ендпоінти
+## 📡 Endpoints
 
-### Транзакції — `/expenses`
+### Transactions: `/expenses`
 
-| Метод | Шлях | Опис |
+| Method | Path | Description |
 |:---:|---|---|
-| `GET` | `/expenses` | Список транзакцій з фільтрами та пагінацією |
-| `GET` | `/expenses/{id}` | Одна транзакція |
-| `POST` | `/expenses` | Створити транзакцію |
-| `PATCH` | `/expenses/{id}` | Частково оновити транзакцію |
-| `DELETE` | `/expenses/{id}` | Видалити транзакцію |
+| `GET` | `/expenses` | List transactions with filters and pagination |
+| `GET` | `/expenses/{id}` | Get a single transaction |
+| `POST` | `/expenses` | Create a transaction |
+| `PATCH` | `/expenses/{id}` | Partially update a transaction |
+| `DELETE` | `/expenses/{id}` | Delete a transaction |
 
-**Параметри запиту для `GET /expenses`:**
+**Query parameters for `GET /expenses`:**
 
-| Параметр | Тип | Опис |
+| Parameter | Type | Description |
 |---|---|---|
-| `category` | `str` | Фільтр за категорією |
-| `is_income` | `bool` | `true` — лише доходи, `false` — лише витрати |
-| `date_from` / `date_to` | `date` | Діапазон дат (включно) |
-| `limit` | `int` | 1–100, за замовчуванням 10 |
-| `offset` | `int` | Зсув, за замовчуванням 0 |
+| `category` | `str` | Filter by category |
+| `is_income` | `bool` | `true` for income only, `false` for expenses only |
+| `date_from` / `date_to` | `date` | Date range (inclusive) |
+| `limit` | `int` | 1–100, default 10 |
+| `offset` | `int` | Offset, default 0 |
 
-### Фінанси — `/finances`
+### Finances: `/finances`
 
-| Метод | Шлях | Опис |
+| Method | Path | Description |
 |:---:|---|---|
-| `GET` | `/finances/convert` | Конвертувати суму в гривнях в інші валюти |
+| `GET` | `/finances/convert` | Convert an amount in UAH into other currencies |
 
-| Параметр | Тип | Опис |
+| Parameter | Type | Description |
 |---|---|---|
-| `amount` | `Decimal` | Сума в UAH (> 0) |
-| `currencies` | `list[str]` | Коди валют ISO 4217, до 10 штук (за замовчуванням `USD`, `EUR`) |
-| `on_date` | `date` | Дата курсу (необовʼязково, за замовчуванням — сьогодні) |
+| `amount` | `Decimal` | Amount in UAH (> 0) |
+| `currencies` | `list[str]` | ISO 4217 currency codes, up to 10 (default `USD`, `EUR`) |
+| `on_date` | `date` | Rate date (optional, defaults to today) |
 
-## 🧪 Приклади
+## 🧪 Examples
 
-**Створити витрату:**
+**Create an expense:**
 
 ```bash
 curl -X POST http://127.0.0.1:8000/expenses \
   -H "Content-Type: application/json" \
   -d '{
-    "title": "Продукти",
+    "title": "Groceries",
     "category": "food",
     "amount": "450.75",
     "spent_on": "2026-11-18",
-    "note": "Сільпо"
+    "note": "Weekly shopping"
   }'
 ```
 
 ```json
 {
-  "title": "Продукти",
+  "title": "Groceries",
   "category": "food",
   "amount": "450.75",
   "spent_on": "2026-11-18",
-  "note": "Сільпо",
+  "note": "Weekly shopping",
   "is_income": false,
   "id": 1
 }
 ```
 
-**Отримати доходи за листопад:**
+**Get income for November:**
 
 ```bash
 curl "http://127.0.0.1:8000/expenses?is_income=true&date_from=2026-11-01&date_to=2026-11-30"
 ```
 
-**Конвертувати 1000 ₴ у долари, євро та злоті:**
+**Convert ₴1000 into US dollars, euros and złoty:**
 
 ```bash
 curl "http://127.0.0.1:8000/finances/convert?amount=1000&currencies=USD&currencies=EUR&currencies=PLN"
@@ -155,45 +155,45 @@ curl "http://127.0.0.1:8000/finances/convert?amount=1000&currencies=USD&currenci
 }
 ```
 
-> Курси в прикладі ілюстративні — реальні значення повертає API НБУ.
+> The rates in this example are illustrative. Real values come from the NBU API.
 
-### Коди помилок
+### Error codes
 
-| Код | Коли |
+| Code | When |
 |:---:|---|
-| `404` | Транзакцію не знайдено / невідомий код валюти |
-| `422` | Невалідні дані запиту |
-| `502` | API НБУ недоступне |
+| `404` | Transaction not found / unknown currency code |
+| `422` | Invalid request data |
+| `502` | NBU API is unavailable |
 
-## 📁 Структура проєкту
+## 📁 Project structure
 
 ```
 finance_tracker/
 ├── app/
-│   ├── main.py            # Точка входу, підключення роутерів
-│   ├── database.py        # Двигун SQLAlchemy та сесії
-│   ├── models.py          # ORM-модель Expense
-│   ├── schemas.py         # Pydantic-схеми (Create / Update / Out)
+│   ├── main.py            # Entry point, router registration
+│   ├── database.py        # SQLAlchemy engine and sessions
+│   ├── models.py          # Expense ORM model
+│   ├── schemas.py         # Pydantic schemas (Create / Update / Out)
 │   ├── routers/
-│   │   ├── expenses.py    # CRUD транзакцій
-│   │   └── finances.py    # Конвертація валют
+│   │   ├── expenses.py    # Transaction CRUD
+│   │   └── finances.py    # Currency conversion
 │   └── services/
-│       └── external.py    # Клієнт API НБУ
+│       └── external.py    # NBU API client
 ├── requirements.txt
 └── README.md
 ```
 
-## 🗂 Модель даних
+## 🗂 Data model
 
-| Поле | Тип | Опис |
+| Field | Type | Description |
 |---|---|---|
-| `id` | `int` | Первинний ключ |
-| `title` | `str(100)` | Назва |
-| `category` | `str(50)` | Категорія |
-| `amount` | `Numeric(10, 2)` | Сума (> 0) |
-| `spent_on` | `date` | Дата операції |
-| `note` | `str(255)?` | Нотатка (необовʼязково) |
-| `is_income` | `bool` | `true` — дохід, `false` — витрата |
+| `id` | `int` | Primary key |
+| `title` | `str(100)` | Title |
+| `category` | `str(50)` | Category |
+| `amount` | `Numeric(10, 2)` | Amount (> 0) |
+| `spent_on` | `date` | Transaction date |
+| `note` | `str(255)?` | Note (optional) |
+| `is_income` | `bool` | `true` for income, `false` for an expense |
 
 ---
 
