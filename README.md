@@ -38,7 +38,7 @@
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/pavlo960/finance-tracker.git
+git clone https://github.com/Pavlo960/finance-tracker.git
 cd finance-tracker
 
 # 2. Create a virtual environment
@@ -199,6 +199,6 @@ finance_tracker/
 
 <div align="center">
 
-Made with ❤️ by [pavlo960](https://github.com/pavlo960)
+Made with ❤️ by [pavlo960](https://github.com/Pavlo960)
 
 </div>
